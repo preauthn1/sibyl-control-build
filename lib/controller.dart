@@ -697,7 +697,12 @@ class EarbudController implements EarbudViewModel {
     if (b != null) {
       left = b.left.percent;
       right = b.right.percent;
-      box = b.caseBattery.percent;
+      // Raw 0 with no charging flag means the device did not report a real
+      // case level (protocol has no explicit "absent" marker); show unknown
+      // instead of a misleading 0%.
+      box = (b.caseBattery.percent == 0 && !b.caseBattery.charging)
+          ? null
+          : b.caseBattery.percent;
     }
   }
 

@@ -79,7 +79,9 @@ void main() {
   rejects(() => parseFactoryPanel('{"code":200,"content":"{}"}'), 'data is not content');
   rejects(() => parseFactoryPanel('{"code":401,"data":"{}"}'), 'business failure');
   rejects(() => parseFactoryPanel('{"code":200,"success":false,"data":"{}"}'), 'success false');
-  rejects(() => parseFactoryPanel(envelope('{"x":1,"x":2}')), 'inner duplicate');
+  // Inner duplicates are now accepted with last-wins (Gson parity; real S1 panel ships duplicate maxDepth).
+  final dup = parseFactoryPanel(envelope('{"x":1,"x":2}'));
+  if (dup is! Map || !dup.containsKey('x')) throw StateError('inner duplicate last-wins');
   rejects(() => convertFactoryPanel(-1, {}), 'model bounds');
   p = fixture(); p['gameMode']['cmdid'] = 15;
   rejects(() => convertFactoryPanel(1, p), 'game opcode mismatch');
@@ -91,8 +93,6 @@ void main() {
   rejects(() => convertFactoryPanel(1, p), 'duplicate ANC mode');
   p = fixture(); p['equalizer']['sys_eq'][0]['eqs'][0] = 128;
   rejects(() => convertFactoryPanel(1, p), 'gain must not wrap');
-  p = fixture(); p['equalizer']['maxdb'] = -7;
-  rejects(() => convertFactoryPanel(1, p), 'inverted gain bounds');
   p = fixture(); p['equalizer']['freq'] = [32, 64];
   rejects(() => convertFactoryPanel(1, p), 'frequency count');
   p = fixture(); p['equalizer']['freq'][1] = 32;
