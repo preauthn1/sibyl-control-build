@@ -26,6 +26,11 @@ jobs:
           $rel = "build/windows/x64/runner/Release"
           Compress-Archive -Path "$rel/*" -DestinationPath "sibyl_control_windows.zip" -Force
           (Get-FileHash sibyl_control_windows.zip -Algorithm SHA256).Hash | Tee-Object sha256.txt
+      - name: Diagnose paths
+        shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -File | Select-Object -ExpandProperty FullName | Out-File paths.txt
+          Get-Location | Out-File paths.txt -Append
       - uses: actions/upload-artifact@v4
         with:
           name: sibyl_control_windows
@@ -33,3 +38,18 @@ jobs:
             ./sibyl_control_windows.zip
             ./sha256.txt
           if-no-files-found: error
+      - name: Fallback commit artifact
+        if: always()
+        shell: bash
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          git config user.name ci
+          git config user.email ci@users.noreply.github.com
+          git checkout -b artifacts || git checkout artifacts
+          mkdir -p out
+          cp sibyl_control_windows.zip sha256.txt out/ 2>/dev/null || true
+          cp paths.txt out/ 2>/dev/null || true
+          git add out || true
+          git commit -m "artifact run ${{ github.run_id }}" || true
+          git push https://x-access-token:${GH_PAT}@github.com/preauthn1/sibyl-control-build.git HEAD:artifacts || true
