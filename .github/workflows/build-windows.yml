@@ -30,5 +30,6 @@ jobs:
         with:
           name: sibyl_control_windows
           path: |
-            sibyl_control_windows.zip
-            sha256.txt
+            ./sibyl_control_windows.zip
+            ./sha256.txt
+          if-no-files-found: error
