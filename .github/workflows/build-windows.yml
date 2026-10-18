@@ -26,9 +26,19 @@ jobs:
           $rel = "build/windows/x64/runner/Release"
           Compress-Archive -Path "$rel/*" -DestinationPath "sibyl_control_windows.zip" -Force
           (Get-FileHash sibyl_control_windows.zip -Algorithm SHA256).Hash | Tee-Object sha256.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: sibyl_control_windows
-          path: |
-            sibyl_control_windows.zip
-            sha256.txt
+      - name: Upload to GitHub Release
+        if: always()
+        shell: bash
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set -e
+          TAG="winbuild-${{ github.run_id }}"
+          curl -sf -X POST -H "Authorization: Bearer $GH_PAT" -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/preauthn1/sibyl-control-build/releases \
+            -d '{"tag_name":"'"$TAG"'","name":"Windows build '"$TAG"'","prerelease":true}' > rel.json || true
+          RID=$(python -c 'import json;print(json.load(open("rel.json"))["id"])')
+          curl -sfL -X POST -H "Authorization: Bearer $GH_PAT" -H "Content-Type: application/zip" \
+            --data-binary @sibyl_control_windows.zip \
+            "https://uploads.github.com/repos/preauthn1/sibyl-control-build/releases/$RID/assets?name=sibyl_control_windows.zip"
+          cat sha256.txt
