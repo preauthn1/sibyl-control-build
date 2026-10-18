@@ -1,0 +1,34 @@
+name: build-windows
+on:
+  workflow_dispatch:
+  push: { branches: [ main ] }
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.35.4
+      - run: flutter doctor -v
+      - run: flutter config --enable-windows-desktop
+      - run: flutter pub get
+      - name: Regenerate windows platform files
+        shell: pwsh
+        run: |
+          if (Test-Path windows) { Remove-Item -Recurse -Force windows }
+          flutter create --platforms=windows --org dev.sibyl --project-name sibyl_control .
+      - run: flutter build windows --release
+      - name: Package
+        shell: pwsh
+        run: |
+          $rel = "build/windows/x64/runner/Release"
+          Compress-Archive -Path "$rel/*" -DestinationPath "sibyl_control_windows.zip" -Force
+          (Get-FileHash sibyl_control_windows.zip -Algorithm SHA256).Hash | Tee-Object sha256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sibyl_control_windows
+          path: |
+            sibyl_control_windows.zip
+            sha256.txt

@@ -1,0 +1,14 @@
+name: sibyl_control
+description: Cross-platform earbud controller based on static protocol research.
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  universal_ble: 3.1.0
+  ffi: ^2.1.4
+  shared_preferences: ^2.5.3
+flutter:
+  uses-material-design: true

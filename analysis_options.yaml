@@ -1,0 +1,10 @@
+analyzer:
+  exclude:
+    - build/**
+    - native_templates/**
+    - tool/protocol_check.dart
+    - tool/config_check.dart
+    - tool/rtk_check.dart
+linter:
+  rules:
+    avoid_print: true
