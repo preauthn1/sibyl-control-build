@@ -415,10 +415,12 @@ class EarbudController implements EarbudViewModel {
         }
         if (confirm) await pending.future.timeout(const Duration(seconds: 3));
       } on TimeoutException {
-        // Poison the session so a delayed ACK cannot confirm a later request.
-        _epoch++;
-        unawaited(disconnect());
-        throw StateError('未收到应用层确认；连接已关闭以隔离迟到确认，设备状态未知');
+        // WS200-class devices execute commands and report via status pushes
+        // (cmd=9 ANC etc.) but never send the 0xFE queue ack. The original
+        // app's transport also just continued after its timeout (no retry,
+        // no disconnect). Keep the link alive; state pushes remain the
+        // source of truth for what the device actually did.
+        _log('未收到应用层确认；设备可能已执行，以状态回报为准');
       } finally {
         if (identical(_confirmation, pending)) {
           _confirmation = null;
