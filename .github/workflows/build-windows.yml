@@ -19,8 +19,19 @@ jobs:
         run: |
           if (Test-Path windows) { Remove-Item -Recurse -Force windows }
           flutter create --platforms=windows --org dev.sibyl --project-name sibyl_control .
-          # flutter create writes the stock Flutter icon; restore ours.
+          # flutter create writes the stock Flutter icon and the project-name
+          # window title; restore our branding.
           Copy-Item assets/branding/app_icon.ico windows/runner/resources/app_icon.ico -Force
+          $main = 'windows/runner/main.cpp'
+          (Get-Content $main -Raw).Replace('L"sibyl_control"', 'L"Sibyl Control"') |
+            Set-Content $main -NoNewline
+          $rc = 'windows/runner/Runner.rc'
+          (Get-Content $rc -Raw).
+            Replace('VALUE "FileDescription", "sibyl_control"', 'VALUE "FileDescription", "Sibyl Control"').
+            Replace('VALUE "ProductName", "sibyl_control"', 'VALUE "ProductName", "Sibyl Control"') |
+            Set-Content $rc -NoNewline
+          Select-String -Path $main -Pattern 'Sibyl Control'
+          Select-String -Path $rc -Pattern 'ProductName'
       - run: flutter build windows --release
       - name: Package
         shell: pwsh

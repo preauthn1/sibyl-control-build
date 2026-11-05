@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.sibyl" "\0"
-            VALUE "FileDescription", "sibyl_control" "\0"
+            VALUE "FileDescription", "Sibyl Control" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "sibyl_control" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 dev.sibyl. All rights reserved." "\0"
             VALUE "OriginalFilename", "sibyl_control.exe" "\0"
-            VALUE "ProductName", "sibyl_control" "\0"
+            VALUE "ProductName", "Sibyl Control" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

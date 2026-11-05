@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Sibyl Control
+GenericName=Earbud controller
+Comment=Control SIBYL earbuds over Bluetooth: battery, ANC, equaliser, buttons
+# Set Exec to the installed bundle's binary, e.g. /opt/sibyl-control/sibyl_control
+Exec=sibyl_control
+Icon=sibyl-control
+Terminal=false
+Categories=AudioVideo;Audio;Settings;
+Keywords=bluetooth;earbuds;headphones;anc;equaliser;
+StartupWMClass=sibyl_control
