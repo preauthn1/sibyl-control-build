@@ -1,5 +1,38 @@
 # Build and validation — current source
 
+## Branding pass (2026-11-05)
+
+Measured, not asserted:
+
+- **Android** (`flutter build apk --debug --target-platform android-arm64`,
+  Flutter 3.47.7 — the toolchain this Android project was generated with;
+  Gradle capped at 1 worker / 768 MiB / no daemon): BUILD SUCCESSFUL,
+  `app-debug.apk` 82,782,866 bytes, sha256 `c662e34d332b21bf…`.
+  `aapt2 dump badging`: `application-label:'Sibyl Control'`,
+  `icon='res/mipmap-anydpi-v26/ic_launcher.xml'`. The APK carries
+  `mipmap-anydpi-v26/ic_launcher{,_round}.xml`, `ic_launcher_foreground.png`
+  and `ic_launcher_round.png` at all five densities plus
+  `drawable-*/launch_image.png`; `color/app_background` resolves to `#ff0a0d14`
+  and is the window background. Adaptive foreground measured on the
+  xxxhdpi export: 432x432 canvas, ink 125x219 centred on (216,216), farthest
+  ink corner 127 px against the 132 px safe radius.
+  Debug-signed preview, not installed on a device.
+- **Linux** (Flutter 3.35.4): release build of the shipping entry point, then
+  run on Xvfb — the real window reports `_NET_WM_NAME = "Sibyl Control"` and
+  carries a `_NET_WM_ICON` property; the bundle contains
+  `data/flutter_assets/assets/branding/icon-256.png`. 10 s smoke launch, exit
+  124 from the timeout, zero exception lines.
+- **Windows** (GitHub Actions `windows-2022`, Flutter 3.35.4, run 42090476603,
+  commit d6a062d): build succeeded; the release asset
+  `sibyl_control_windows.zip` (12,247,158 bytes) was downloaded and inspected
+  with `wrestool`/`icotool`. The exe's icon group holds 16/24/32/48/64/128/256
+  entries and the extracted 256 px image is the blue S on the dark plate, not
+  the stock Flutter icon. `VS_VERSION_INFO` reads
+  `FileDescription = Sibyl Control`, `ProductName = Sibyl Control`.
+- Not verified: no device install, no Bluetooth traffic, no light-theme or
+  HiDPI pass, and the Linux `.desktop` entry ships as a script rather than an
+  installed package.
+
 ## UI redesign pass (2026-11-05, Flutter 3.35.4 / Dart 3.9.2)
 
 - `dart analyze lib tool`: No issues found. `dart format`: clean.
