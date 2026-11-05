@@ -1,6 +1,17 @@
 # Sibyl Control 0.1 — Flutter Android / Windows / Linux
 
-Unofficial earbud controller based on static analysis of the user-provided SIBYL MUSIC 1.26 APK. One Flutter Material 3 UI and controller are shared across all three targets; desktop uses a wider layout of the same cards, not a separate web UI.
+Unofficial earbud controller based on static analysis of the user-provided SIBYL MUSIC 1.26 APK. One Flutter UI and controller are shared across all three targets; desktop gets a navigation rail, phones get a bottom bar, and both show the same four screens.
+
+## UI
+
+The interface is one system, not a page of stacked cards:
+
+- **Four screens** — 设备 (connect, battery, product configuration), 声音 (ANC, low-latency, equaliser), 设置 (switches, name, prompt volume, auto power-off, buttons), 日志 (log and the honesty statement). Rail at ≥900 px, bottom bar below it.
+- **One design system** in `lib/ui/theme.dart`: one palette (no violet), one 4/8/12/16/24/32/48 spacing scale, one sharp radius family (8/6/4), one type scale, one button pair (filled = the single main action of a view, outlined = every secondary), one chip, one card, one switch row.
+- **One blocking sentence per screen.** When a control cannot be used, the screen says why once at the top and offers the action that fixes it, instead of repeating a different apology under every control.
+- **No typing where a list exists.** ANC strength is chosen from the configured levels; the old free-text `level` field is gone. The equaliser is ten vertical faders in one strip, horizontally scrollable on a phone.
+- **Unknown stays unknown.** An unreported battery shows "—" over a dashed track, never a 0 % bar; drafts are badged and never presented as device state.
+- `tool/ui_preview.dart` renders the UI against a stub model (`preview: true` on every snapshot) for layout review without hardware: `flutter run -t tool/ui_preview.dart -d linux`.
 
 ## Implemented
 - BLE discovery using manufacturer0xC912 / FE service, vendor/model decoding (ordinary/QCC/RTK), manual address entry, connection lifecycle and notifications.
@@ -12,7 +23,7 @@ Unofficial earbud controller based on static analysis of the user-provided SIBYL
 - Bounded logs remain in memory; product configuration is stored locally with shared_preferences, no cloud sync.
 
 ## Configuration
-Use “导入产品配置” while disconnected. The following is a SCHEMA EXAMPLE ONLY, NOT A VERIFIED PRODUCT PRESET:
+Use “导入 JSON” on the 设备 screen while disconnected, or “读取产品配置” once connected. The following is a SCHEMA EXAMPLE ONLY, NOT A VERIFIED PRODUCT PRESET:
 
 ```json
 {

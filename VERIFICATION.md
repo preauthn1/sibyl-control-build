@@ -1,5 +1,15 @@
 # Build and validation — current source
 
+## UI redesign pass (2026-11-05, Flutter 3.35.4 / Dart 3.9.2)
+
+- `dart analyze lib tool`: No issues found. `dart format`: clean.
+- Linux x64 Release, shipping entry point (`lib/main.dart`): built successfully; 10 s smoke launch on Xvfb `DISPLAY=:96`, exit 124 from the intentional timeout, zero exception/error lines in the launch log. No Bluetooth action performed.
+- Linux x64 Release, preview entry point (`tool/ui_preview.dart`): built successfully and screenshotted at 1280x720 and 420x860 for all four screens, plus the real app's first-launch screen. Every screenshot was reviewed against the layout checklist; the defects found (chips stretching to full width, header not on the content wrap, absent scrollbar, radio-looking step markers, "no devices found" shown before any scan, copy that named a button that did not exist) were fixed and re-shot.
+- The view-model contract (`EarbudViewModel`, `UiSnapshot` and every Ui* class) is unchanged and re-exported from `lib/ui/earbud_app.dart`, so `lib/controller.dart` compiles untouched. Every control gate (`connected && configurationReady && protocol known && idle`) has the same predicate as before; only its presentation changed.
+- Not verified: Android and Windows builds were not re-run in this pass, no hardware was connected, and no control packet was sent.
+
+## Earlier source validation
+
 - Dart analyze lib tool: No issues found.
 - Standalone offline protocol_check.dart: PASS: 109 offline protocol checks (synthetic fixtures only).
 - Linux x64 Release: final source rebuilt successfully (build_linux_final.log). Eight-second UI smoke launch on DISPLAY=:96 emitted renderer initialization and no Dart exception; timeout exit124 intentionally closed the app. No visual widget assertions or Bluetooth actions performed.
