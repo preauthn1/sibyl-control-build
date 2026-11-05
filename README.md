@@ -1,5 +1,7 @@
 # Sibyl Control 0.1 — Flutter Android / Windows / Linux
 
+![Sibyl Control](assets/branding/banner-wordmark.png)
+
 Unofficial earbud controller based on static analysis of the user-provided SIBYL MUSIC 1.26 APK. One Flutter UI and controller are shared across all three targets; desktop gets a navigation rail, phones get a bottom bar, and both show the same four screens.
 
 ## UI
@@ -12,6 +14,28 @@ The interface is one system, not a page of stacked cards:
 - **No typing where a list exists.** ANC strength is chosen from the configured levels; the old free-text `level` field is gone. The equaliser is ten vertical faders in one strip, horizontally scrollable on a phone.
 - **Unknown stays unknown.** An unreported battery shows "—" over a dashed track, never a 0 % bar; drafts are badged and never presented as device state.
 - `tool/ui_preview.dart` renders the UI against a stub model (`preview: true` on every snapshot) for layout review without hardware: `flutter run -t tool/ui_preview.dart -d linux`.
+
+## Branding assets
+
+`assets/branding/` holds the product mark. The concept was drafted with an
+image model and then **redrawn as SVG** (`icon.svg`, `mark.svg`,
+`mark-bold.svg`) so every exported size is crisp and uses only the app's three
+colours — a geometric S built from two 270° arcs, light cornflower `#5AB9FC`
+on `#0A0D14`.
+
+- `assets/mark.png` — the transparent mark the header renders at 26 px (heavier
+  stroke master, so it does not read as a section sign beside the wordmark).
+- `assets/branding/app_icon.ico` — Windows multi-resolution icon (16→256; 16 and
+  24 come from a thicker master because a naive downscale washes the stroke
+  out). The Windows workflow re-copies it after `flutter create`, which
+  otherwise restores the stock Flutter icon.
+- `android/app/src/main/res/mipmap-*/ic_launcher.png` — launcher icons, 48→192.
+- `assets/branding/banner-wordmark.png` — repository header.
+- Rebuild everything with `rsvg-convert` from the SVGs; no raster master is
+  edited by hand.
+
+The Linux runner still uses the GTK default window icon: wiring it needs a
+`.desktop` entry at install time, which this repo does not ship.
 
 ## Implemented
 - BLE discovery using manufacturer0xC912 / FE service, vendor/model decoding (ordinary/QCC/RTK), manual address entry, connection lifecycle and notifications.

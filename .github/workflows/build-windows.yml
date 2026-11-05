@@ -19,6 +19,8 @@ jobs:
         run: |
           if (Test-Path windows) { Remove-Item -Recurse -Force windows }
           flutter create --platforms=windows --org dev.sibyl --project-name sibyl_control .
+          # flutter create writes the stock Flutter icon; restore ours.
+          Copy-Item assets/branding/app_icon.ico windows/runner/resources/app_icon.ico -Force
       - run: flutter build windows --release
       - name: Package
         shell: pwsh

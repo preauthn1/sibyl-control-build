@@ -164,22 +164,12 @@ class _Header extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Tk.accent,
-                      borderRadius: BorderRadius.circular(Tk.rSm),
-                    ),
-                    child: const Text(
-                      'S',
-                      style: TextStyle(
-                        color: Tk.accentInk,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                  // The product mark, same artwork as the app icon.
+                  Image.asset(
+                    'assets/mark.png',
+                    width: 26,
+                    height: 26,
+                    filterQuality: FilterQuality.medium,
                   ),
                   const SizedBox(width: Tk.s3),
                   Text('Sibyl Control', style: Tk.display),

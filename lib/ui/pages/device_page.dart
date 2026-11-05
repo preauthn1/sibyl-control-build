@@ -208,9 +208,14 @@ class _DevicePageState extends State<DevicePage> {
         const SizedBox(height: Tk.s2),
         Align(
           alignment: Alignment.centerLeft,
-          child: TextButton(
+          child: TextButton.icon(
             onPressed: () => setState(() => _advanced = !_advanced),
-            child: Text(
+            icon: Icon(
+              _advanced ? Icons.expand_less : Icons.expand_more,
+              size: 18,
+              color: Tk.muted,
+            ),
+            label: Text(
               _advanced ? '收起高级选项' : '高级：协议与手动地址',
               style: Tk.title.copyWith(color: Tk.muted),
             ),
