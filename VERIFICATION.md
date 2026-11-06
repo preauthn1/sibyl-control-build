@@ -1,5 +1,29 @@
 # Build and validation — current source
 
+## Windows installer (2026-11-06)
+
+- CI run 42251672326 (commit ea127f1, `windows-2022`) compiled
+  `packaging/windows/installer.iss` with the runner's Inno Setup —
+  `Inno Setup Setup Data (6.7.0)` per the setup header.
+- Published `SibylControlSetup-0.1.0.exe`, 10,744,248 bytes, SHA-256
+  `864ec9aca92de36f8f47f5627babcede8b8d6b4cb070a193ffd4fd9e640370b9`;
+  the asset was downloaded and re-hashed locally to the same value.
+- `installer-manifest.txt` (also published) lists the 14 packed files with
+  their own SHA-256: `sibyl_control.exe`, `flutter_windows.dll`,
+  `universal_ble_plugin.dll`, `data\app.so`, `data\icudtl.dat`, the five
+  `flutter_assets` manifests plus `NOTICES.Z`, `assets\mark.png`,
+  `assets\branding\icon-256.png`, the Material Icons font and
+  `shaders\ink_sparkle.frag` — the complete release bundle.
+- The setup's `MAINICON` carries 16/24/32/48/64/128/256; the extracted 128 px
+  image is byte-identical to `assets/branding` master `icon-128.png`
+  (ImageMagick RMSE 0). `VS_VERSION_INFO`: `CompanyName = Sibyl`,
+  `FileDescription = Sibyl Control Setup`, `ProductName = Sibyl Control`,
+  `FileVersion = 0.1.0`.
+- Not verified: the installer has not been run. There is no Windows host and
+  no Wine here, and Debian's innoextract (1.9) cannot read an Inno Setup 6.7
+  payload, so the install/uninstall flow, the shortcuts and the upgrade path
+  are unexercised. The installer is unsigned, so SmartScreen will warn.
+
 ## Branding pass (2026-11-05)
 
 Measured, not asserted:

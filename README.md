@@ -93,10 +93,11 @@ directory with `flutter create`.
 - Local build: `iscc /DMyAppVersion=0.1.0 packaging\windows\installer.iss`
   after `flutter build windows --release`; output lands in `dist\`.
 
-Each CI run publishes both `sibyl_control_windows.zip` (portable) and
-`SibylControlSetup-<version>.exe` to its prerelease, with SHA-256 for each in
-the job log. Uninstalling removes the program directory; settings written by
-`shared_preferences` stay in the user profile.
+Each CI run publishes `sibyl_control_windows.zip` (portable),
+`SibylControlSetup-<version>.exe` and `installer-manifest.txt` — the list ISCC
+emits of every packed file with its SHA-256 — to its prerelease, with SHA-256
+for the two binaries in the job log. Uninstalling removes the program
+directory; settings written by `shared_preferences` stay in the user profile.
 
 ## Platform prerequisites
 - Android: Bluetooth runtime permissions prompted only on action. Android12+ SCAN/CONNECT; Android11 and older location permission for BLE. Native RFCOMM runs on background executors.
