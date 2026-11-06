@@ -47,7 +47,9 @@ MinVersion=10.0
 OutputDir={#OutputDir}
 OutputBaseFilename=SibylControlSetup-{#MyAppVersion}
 ; ISCC writes every packed file here, so CI can prove what went in.
-OutputManifestFile={#OutputDir}\manifest.txt
+; A relative OutputManifestFile is resolved against OutputDir, so this is
+; dist\manifest.txt — do not repeat the directory.
+OutputManifestFile=manifest.txt
 SetupIconFile=..\..\assets\branding\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
