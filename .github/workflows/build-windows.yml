@@ -49,9 +49,8 @@ jobs:
           & $iscc /Qp "/DMyAppVersion=$v" packaging\windows\installer.iss
           if ($LASTEXITCODE -ne 0) { throw "ISCC failed with $LASTEXITCODE" }
           Get-ChildItem dist | Format-Table Name, Length
-          Write-Host '--- packed files ---'
-          Get-Content dist\manifest.txt | Select-Object -Skip 1 |
-            ForEach-Object { ($_ -split "\t")[0] }
+          Write-Host '--- ISCC manifest (every packed file) ---'
+          Get-Content dist\manifest.txt
       - name: Package
         shell: pwsh
         run: |
@@ -81,5 +80,8 @@ jobs:
             -H "Content-Type: application/vnd.microsoft.portable-executable" \
             --data-binary "@dist/$SETUP" \
             "https://uploads.github.com/repos/preauthn1/sibyl-control-build/releases/$RID/assets?name=$SETUP"
+          curl -sfL -X POST -H "Authorization: Bearer $GH_PAT" -H "Content-Type: text/plain" \
+            --data-binary @dist/manifest.txt \
+            "https://uploads.github.com/repos/preauthn1/sibyl-control-build/releases/$RID/assets?name=installer-manifest.txt"
           echo "zip   $(cat sha256.txt)"
           echo "setup $(cat sha256-setup.txt)"
