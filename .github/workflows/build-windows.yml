@@ -47,6 +47,9 @@ jobs:
           & $iscc /Qp "/DMyAppVersion=$v" packaging\windows\installer.iss
           if ($LASTEXITCODE -ne 0) { throw "ISCC failed with $LASTEXITCODE" }
           Get-ChildItem dist | Format-Table Name, Length
+          Write-Host '--- packed files ---'
+          Get-Content dist\manifest.txt | Select-Object -Skip 1 |
+            ForEach-Object { ($_ -split "\t")[0] }
       - name: Package
         shell: pwsh
         run: |

@@ -46,6 +46,8 @@ ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0
 OutputDir={#OutputDir}
 OutputBaseFilename=SibylControlSetup-{#MyAppVersion}
+; ISCC writes every packed file here, so CI can prove what went in.
+OutputManifestFile={#OutputDir}\manifest.txt
 SetupIconFile=..\..\assets\branding\app_icon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 UninstallDisplayName={#MyAppName}
